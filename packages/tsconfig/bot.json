@@ -5,6 +5,10 @@
   "include": ["src"],
   "exclude": ["node_modules"],
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "CommonJS",
+    "lib": ["ESNext"],
+    "types": ["node"],
     "isolatedModules": false
   }
 }

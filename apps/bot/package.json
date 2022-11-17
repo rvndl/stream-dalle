@@ -4,15 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "build": "",
-    "start": "",
-    "lint": ""
+    "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
     "tmi.js": "^1.8.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
     "@types/tmi.js": "^1.8.2",
     "@types/node": "^17.0.12",
     "eslint": "7.32.0",
