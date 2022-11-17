@@ -1,0 +1,24 @@
+{
+  "name": "bot",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "",
+    "start": "",
+    "lint": ""
+  },
+  "dependencies": {
+    "tmi.js": "^1.8.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@types/tmi.js": "^1.8.2",
+    "@types/node": "^17.0.12",
+    "eslint": "7.32.0",
+    "ts-node-dev": "2.0.0",
+    "typescript": "^4.5.3",
+    "tsconfig": "*",
+    "eslint-config-custom": "*"
+  }
+}
