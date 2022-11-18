@@ -51,8 +51,13 @@ model User {
   sessions      Session[]
   logs          Logs[]
 
-  dalleAPIKey String?
-  imageSize   String  @default("1024x1024")
+  APIKey     String?
+  rewardId   String?
+  imageSize  String  @default("1024x1024")
+  conencted  Boolean @default(false)
+  showAuthor Boolean @default(true)
+  showPrompt Boolean @default(true)
+  showFrame  Boolean @default(true)
 }
 
 model VerificationToken {
