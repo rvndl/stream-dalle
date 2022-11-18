@@ -16,6 +16,9 @@ build
 # bot
 dist/
 
+# database
+generated/
+
 # misc
 .DS_Store
 *.pem
