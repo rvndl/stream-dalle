@@ -1,5 +1,5 @@
 {
-  "name": "bot",
+  "name": "@stream-dalle/bot",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -15,7 +15,7 @@
     "eslint": "7.32.0",
     "ts-node-dev": "2.0.0",
     "typescript": "^4.5.3",
-    "tsconfig": "*",
-    "eslint-config-custom": "*"
+    "@stream-dalle/tsconfig": "*",
+    "@stream-dalle/eslint-config": "*"
   }
 }
