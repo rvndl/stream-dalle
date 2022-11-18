@@ -15,7 +15,7 @@ export default function Page() {
       <h1
         className="font-bold text-6xl"
         style={{
-          background: "linear-gradient(90deg, #a855f7, #c084fc)",
+          background: "linear-gradient(90deg, #a149f5, #c89af5)",
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
         }}
@@ -25,7 +25,7 @@ export default function Page() {
       </h1>
 
       <Button loading={redirecting} onClick={handleOnSignIn}>
-        Login with Twitch
+        {redirecting ? "Redirecting..." : "Sign in with Twitch"}
       </Button>
     </main>
   );
