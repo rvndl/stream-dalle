@@ -6,3 +6,4 @@ export * from "./card";
 export * from "./select";
 export * from "./badge";
 export * from "./checkbox";
+export * from "./steps";

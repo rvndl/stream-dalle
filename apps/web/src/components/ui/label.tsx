@@ -6,7 +6,7 @@ interface Props extends LabelHTMLAttributes<HTMLLabelElement> {}
 export const Label = ({ children, className, ...rest }: Props) => (
   <label
     className={twMerge(
-      "block mb-1 text-sm font-medium text-gray-900",
+      "block mb-1 text-sm font-medium text-gray-400",
       className
     )}
     {...rest}
