@@ -11,27 +11,38 @@ export const Steps = ({ total, current }: Steps) => {
   }
 
   return (
-    <div className="flex gap-8 items-center">
+    <div className="flex items-center gap-1">
       {Array.from({ length: total }, (_, i) => {
         const active = current >= i + 1;
         return (
-          <div
-            className={clsx(
-              "border rounded-full shrink-0 w-16 h-16 flex items-center justify-center",
-              active
-                ? "border-purple-400 bg-purple-400 bg-opacity-10"
-                : "border-gray-600"
-            )}
-          >
-            <p
+          <>
+            <div
+              key={i}
               className={clsx(
-                "leading-none text-xl",
-                active ? "font-semibold text-purple-500" : "text-gray-500"
+                "border rounded-full shrink-0 w-16 h-16 flex items-center justify-center transition-all",
+                active
+                  ? "border-purple-400 bg-purple-400 bg-opacity-10"
+                  : "border-gray-600"
               )}
             >
-              {i + 1}
-            </p>
-          </div>
+              <p
+                className={clsx(
+                  "leading-none text-xl transition-all",
+                  active ? "font-semibold text-purple-400" : "text-gray-500"
+                )}
+              >
+                {i + 1}
+              </p>
+            </div>
+            {i < total - 1 && (
+              <span
+                className={clsx(
+                  "w-8 h-1 rounded-md transition-all",
+                  current >= i + 2 ? "bg-purple-400" : "bg-gray-600/50"
+                )}
+              />
+            )}
+          </>
         );
       })}
     </div>
