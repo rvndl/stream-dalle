@@ -1,17 +1,32 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useStepStore } from "../../store/step";
-import { Label, Input, Button } from "../ui";
+import { trpc } from "../../utils/tprc";
+import { Label, Input, Button, Card } from "../ui";
 
 export const Dalle = () => {
   const [apiKey, setApiKey] = useState("");
-  const increase = useStepStore((state) => state.increase);
+  const nextStep = useStepStore((state) => state.nextStep);
+
+  const { mutate, isLoading } = trpc.auth.updateApiKey.useMutation({
+    onSuccess: () => nextStep(),
+    onError: (error) => toast.error(error.message),
+  });
+
+  const handleOnNext = () => {
+    if (apiKey.length < 48) {
+      return;
+    }
+
+    mutate({ apiKey });
+  };
 
   return (
-    <div className="bg-gray-800 p-4 rounded-xl w-full md:w-[30rem] flex flex-col">
-      <h1 className="font-bold text-2xl">Setup DALL·E API</h1>
-      <p className="text-gray-400 leading-tight text-sm">
-        Setup the DALL·E API to generate custom images.
-      </p>
+    <Card
+      title="Setup DALL·E API"
+      description=" Setup the DALL·E API to generate custom images."
+      className="w-full md:w-[30rem]"
+    >
       <div className="mt-4 flex flex-rocolw gap-4 items-start">
         <section className="grid gap-2 flex-1">
           <div>
@@ -26,6 +41,7 @@ export const Dalle = () => {
               </a>
             </Label>
             <Input
+              id="dalle_api_key"
               name="dalle_api_key"
               type="password"
               placeholder="***"
@@ -36,9 +52,13 @@ export const Dalle = () => {
           </div>
         </section>
       </div>
-      <Button className="self-end mt-4" onClick={() => increase()}>
+      <Button
+        className="self-end mt-4"
+        loading={isLoading}
+        onClick={() => handleOnNext()}
+      >
         Next
       </Button>
-    </div>
+    </Card>
   );
 };

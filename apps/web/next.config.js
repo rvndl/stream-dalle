@@ -3,4 +3,7 @@ module.exports = {
   experimental: {
     transpilePackages: ["ui"],
   },
+  images: {
+    domains: ["static-cdn.jtvnw.net"],
+  },
 };

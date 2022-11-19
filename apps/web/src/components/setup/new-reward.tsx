@@ -1,27 +1,52 @@
 import Image from "next/image";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useStepStore } from "../../store/step";
+import { trpc } from "../../utils/tprc";
 import { PointsIcon } from "../icons";
-import { Label, Input, Button } from "../ui";
+import { Label, Input, Button, Card } from "../ui";
 
 export const NewReward = () => {
   const [cost, setCost] = useState(10000);
+  const [title, setTitle] = useState("");
+  const [cooldown, setCooldown] = useState(30);
+  const [prompt, setPrompt] = useState("");
   const [backgroundColor, setBackgroundColor] = useState("#ff0000");
-  const increase = useStepStore((state) => state.increase);
+  const nextStep = useStepStore((state) => state.nextStep);
+
+  const { mutate, isLoading } = trpc.auth.createReward.useMutation({
+    onSuccess: () => nextStep(),
+    onError: (error) => toast.error(error.message),
+  });
 
   const humanCost = new Intl.NumberFormat("en-US").format(cost);
 
+  const handleOnNext = async () => {
+    await mutate({
+      cost,
+      title,
+      cooldown,
+      backgroundColor,
+      prompt,
+    });
+  };
+
   return (
-    <div className="bg-gray-800 p-4 rounded-xl w-full md:w-[30rem] flex flex-col">
-      <h1 className="font-bold text-2xl">Create a new Custom Reward</h1>
-      <p className="text-gray-400 leading-tight text-sm">
-        Create a new custom reward that will be available for your viewers.
-      </p>
+    <Card
+      title="Create a new Custom Reward"
+      description="Create a new custom reward that will be available for your viewers"
+      className="w-full md:w-[30rem]"
+    >
       <div className="mt-6 flex flex-row gap-4 items-start">
         <section className="grid grid-cols-2 gap-2 flex-1">
           <div>
             <Label>Title</Label>
-            <Input placeholder="Title" required />
+            <Input
+              placeholder="Title"
+              value={title}
+              onChange={(e) => setTitle(e.currentTarget.value)}
+              required
+            />
           </div>
           <div>
             <Label>Cost</Label>
@@ -35,8 +60,23 @@ export const NewReward = () => {
             />
           </div>
           <div>
-            <Label>Global cooldown</Label>
-            <Input type="number" min={0} placeholder="0" />
+            <Label>Global cooldown (sec.)</Label>
+            <Input
+              type="number"
+              min={0}
+              value={cooldown}
+              placeholder="0"
+              onChange={(e) => setCooldown(parseInt(e.currentTarget.value))}
+            />
+          </div>
+          <div>
+            <Label>Description</Label>
+            <Input
+              type="text"
+              placeholder="Description"
+              value={prompt}
+              onChange={(e) => setPrompt(e.currentTarget.value)}
+            />
           </div>
           <div>
             <Label>Background color</Label>
@@ -65,9 +105,13 @@ export const NewReward = () => {
           </div>
         </section>
       </div>
-      <Button className="self-end mt-4" onClick={() => increase()}>
+      <Button
+        className="self-end mt-4"
+        loading={isLoading}
+        onClick={handleOnNext}
+      >
         Next
       </Button>
-    </div>
+    </Card>
   );
 };

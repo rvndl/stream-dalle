@@ -58,6 +58,7 @@ model User {
   showAuthor Boolean @default(true)
   showPrompt Boolean @default(true)
   showFrame  Boolean @default(true)
+  showTime   Int     @default(10000)
 }
 
 model VerificationToken {

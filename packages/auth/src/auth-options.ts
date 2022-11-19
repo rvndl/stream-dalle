@@ -10,6 +10,7 @@ export const authOptions: NextAuthOptions = {
     TwitchProvider({
       clientId: process.env.TWITCH_CLIENT_ID!,
       clientSecret: process.env.TWITCH_CLIENT_SECRET!,
+
       authorization: {
         params: {
           scope: "openid user:read:email channel:manage:redemptions",
@@ -26,6 +27,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     session({ session, user }) {
+      // @ts-ignore - TODO: Fix this
       session.user.id = user.id;
       return session;
     },

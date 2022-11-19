@@ -48,7 +48,7 @@ export const Button = ({
       {...rest}
     >
       {loading && (
-        <span className="mr-2">
+        <span className="mr-2 flex items-center">
           <Spinner className="text-purple-400" />
         </span>
       )}

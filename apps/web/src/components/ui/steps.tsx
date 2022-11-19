@@ -11,11 +11,11 @@ export const Steps = ({ total, current }: Steps) => {
   }
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex gap-1">
       {Array.from({ length: total }, (_, i) => {
         const active = current >= i + 1;
         return (
-          <>
+          <div key={i} className="flex gap-1 items-center">
             <div
               key={i}
               className={clsx(
@@ -42,7 +42,7 @@ export const Steps = ({ total, current }: Steps) => {
                 )}
               />
             )}
-          </>
+          </div>
         );
       })}
     </div>

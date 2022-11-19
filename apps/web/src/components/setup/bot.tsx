@@ -1,23 +1,53 @@
-import { Button } from "../ui";
+import { useEffect, useRef, useState } from "react";
+import { useStepStore } from "../../store/step";
+import { Button, Card } from "../ui";
+import { io, Socket } from "socket.io-client";
 
 export const Bot = () => {
+  const [connecting, setConnecting] = useState(true);
+  const [joining, setJoining] = useState(false);
+  const nextStep = useStepStore((state) => state.nextStep);
+  const socket = useRef<Socket | null>(null);
+
+  useEffect(() => {
+    socket.current = io(process.env.NEXT_PUBLIC_WS_URL!, {
+      reconnectionDelayMax: 10000,
+      withCredentials: true,
+    });
+
+    socket.current.on("connect", () => {
+      setConnecting(false);
+    });
+
+    socket.current.on("channel-join-success", () => nextStep());
+
+    return () => {
+      socket.current?.disconnect();
+    };
+  }, []);
+
+  const handleOnConnect = () => {
+    setJoining(true);
+    socket.current?.emit("channel-join");
+  };
+
   return (
-    <div className="bg-gray-800 p-4 rounded-xl w-full md:w-[30rem] flex flex-col">
-      <h1 className="font-bold text-2xl">Setup StreamDalle Bot</h1>
-      <p className="text-gray-400 leading-tight text-sm">
-        Connect StreamDalle Bot to your Twitch channel.
-      </p>
+    <Card
+      title="Setup StreamDalle Bot"
+      description="Connect StreamDalle Bot to your Twitch channel."
+      className="w-full md:w-[30rem]"
+    >
       <div className="mt-4 flex flex-rocolw gap-4 items-start">
         <section className="grid gap-2 flex-1">
-          <p className="text-gray-400 leading-tight text-sm">
-            It is recommended to give the bot the <b>moderator rank</b>, then it
-            will be able to automatically return points when redemption is
-            invalid
-          </p>
-          <Button className="mt-2">Connect</Button>
+          <Button
+            className="mt-2"
+            loading={joining || connecting}
+            onClick={handleOnConnect}
+          >
+            {connecting ? "Loading..." : joining ? "Connecting..." : "Connect"}
+          </Button>
         </section>
       </div>
-      <Button className="self-end mt-4">Finish</Button>
-    </div>
+    </Card>
   );
 };
