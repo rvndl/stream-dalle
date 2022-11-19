@@ -1,13 +1,9 @@
 import { Button, Card, Input, Label } from "../components/ui";
 import { getSession, signOut } from "next-auth/react";
-import { useOverlayUrl } from "../hooks/use-overlay-url";
-import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
+import { Logs, Settings } from "../components/dashboard";
 
 const Dashboard = () => {
-  const url = useOverlayUrl();
-  const router = useRouter();
-
   return (
     <main className="p-4 flex flex-col items-center">
       <nav className="w-full flex justify-between">
@@ -35,21 +31,8 @@ const Dashboard = () => {
         </Button>
       </nav>
       <section className="flex mt-8 gap-4 w-full max-w-screen-lg">
-        <Card title="Settings" className="self-start">
-          <div className="mt-4 flex flex-col gap-4">
-            <div>
-              <Label>Overlay url</Label>
-              <Input
-                value={url}
-                readOnly
-                onClick={(e) => e.currentTarget.select()}
-              />
-            </div>
-            <Button size="sm" onClick={() => router.push("/setup")}>
-              Rerun setup
-            </Button>
-          </div>
-        </Card>
+        <Settings />
+        <Logs />
       </section>
     </main>
   );

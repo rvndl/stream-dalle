@@ -14,6 +14,7 @@ export const onRedeem = async (
   }
 
   const rewardId = chatUser["custom-reward-id"];
+  const redeemer = chatUser["display-name"] || chatUser.username || "unknown";
 
   const user = await prisma?.user.findFirst({
     where: {
@@ -52,12 +53,28 @@ export const onRedeem = async (
 
     const art = {
       url: response.data.data[0].url,
-      author: chatUser["display-name"],
+      author: redeemer,
       prompt: message,
     };
 
     io.to(channel).emit("new-art", art);
+
+    await prisma?.logs.create({
+      data: {
+        redeemer: redeemer,
+        status: "SUCCESS",
+        userName: channel.slice(1),
+      },
+    });
   } catch (error) {
+    await prisma?.logs.create({
+      data: {
+        redeemer: redeemer,
+        status: "FAILURE",
+        userName: channel.slice(1),
+      },
+    });
+
     bot.say(channel, `@${chatUser.username} Failed to generate your prompt`);
     console.log(error);
   }

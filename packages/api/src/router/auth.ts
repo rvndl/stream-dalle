@@ -4,6 +4,26 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 
 export const authRouter = router({
+  logs: protectedProcedure.query(async ({ ctx }) => {
+    const { name } = ctx.session?.user;
+    if (!name) {
+      return [];
+    }
+
+    const logs = await ctx.prisma?.logs.findMany({
+      where: {
+        userName: {
+          equals: name,
+          mode: "insensitive",
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return logs;
+  }),
   getSession: protectedProcedure.query(({ ctx }) => {
     return ctx.session.user;
   }),

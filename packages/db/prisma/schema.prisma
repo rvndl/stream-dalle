@@ -43,7 +43,7 @@ model Session {
 
 model User {
   id            String    @id @default(cuid())
-  name          String?
+  name          String?   @unique
   email         String?   @unique
   emailVerified DateTime?
   image         String?
@@ -70,11 +70,17 @@ model VerificationToken {
 }
 
 model Logs {
-  id        String   @id @default(cuid())
-  userId    String?
-  from      String
-  message   String
-  createdAt DateTime @default(now())
+  id        String    @id @default(cuid())
+  userName  String
+  redeemer  String
+  status    LogStatus @default(UNKNOWN)
+  createdAt DateTime  @default(now())
 
-  user User? @relation(fields: [userId], references: [id])
+  user User? @relation(fields: [userName], references: [name])
+}
+
+enum LogStatus {
+  UNKNOWN
+  SUCCESS
+  FAILURE
 }
