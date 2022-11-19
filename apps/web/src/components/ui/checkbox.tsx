@@ -8,7 +8,7 @@ export const Checkbox = ({ className, ...rest }: Props) => {
     <input
       type="checkbox"
       className={twMerge(
-        "w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500",
+        "w-4 h-4 text-purple-600 bg-purple-500/40 rounded border-none focus:ring-purple-500",
         className
       )}
       {...rest}
