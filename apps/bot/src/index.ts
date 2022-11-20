@@ -29,7 +29,7 @@ async function bootstrap() {
     joinRooms(socket);
   });
 
-  httpServer.listen(8080);
+  httpServer.listen(process.env.TWITCH_BOT_WS_PORT);
 }
 
 bootstrap().catch((err) => console.error(err));
