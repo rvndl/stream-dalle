@@ -1,4 +1,4 @@
-import { Button, Card, Input, Label } from "../components/ui";
+import { Button } from "../components/ui";
 import { getSession, signOut } from "next-auth/react";
 import { GetServerSideProps } from "next";
 import { Logs, Settings } from "../components/dashboard";

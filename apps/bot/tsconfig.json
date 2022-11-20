@@ -1,5 +1,5 @@
 {
-  "extends": "@stream-dalle/tsconfig/bot.json",
+  "extends": "@stream-dalle/tsconfig/node.json",
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {

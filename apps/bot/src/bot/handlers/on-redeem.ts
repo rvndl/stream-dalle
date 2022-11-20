@@ -2,6 +2,7 @@ import { Configuration, OpenAIApi } from "openai";
 import { Server } from "socket.io";
 import { ChatUserstate } from "tmi.js";
 import { Bot } from "..";
+import { prisma } from "@stream-dalle/db";
 
 export const onRedeem = async (
   channel: string,
@@ -16,7 +17,7 @@ export const onRedeem = async (
   const rewardId = chatUser["custom-reward-id"];
   const redeemer = chatUser["display-name"] || chatUser.username || "unknown";
 
-  const user = await prisma?.user.findFirst({
+  const user = await prisma.user.findFirst({
     where: {
       name: { equals: channel.slice(1), mode: "insensitive" },
     },
@@ -59,7 +60,7 @@ export const onRedeem = async (
 
     io.to(channel).emit("new-art", art);
 
-    await prisma?.logs.create({
+    await prisma.logs.create({
       data: {
         redeemer: redeemer,
         status: "SUCCESS",
@@ -67,7 +68,7 @@ export const onRedeem = async (
       },
     });
   } catch (error) {
-    await prisma?.logs.create({
+    await prisma.logs.create({
       data: {
         redeemer: redeemer,
         status: "FAILURE",

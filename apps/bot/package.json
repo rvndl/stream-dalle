@@ -23,5 +23,8 @@
     "typescript": "^4.5.3",
     "@stream-dalle/tsconfig": "*",
     "@stream-dalle/eslint-config": "*"
-  }
+  },
+  "bundledDependencies": [
+    "@stream-dalle/db"
+  ]
 }
