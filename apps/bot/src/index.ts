@@ -3,6 +3,7 @@ import { createServer } from "https";
 import { Server } from "socket.io";
 import { joinRooms, onChannelJoin } from "./socket";
 import { onRedeem } from "./bot/handlers/on-redeem";
+import * as fs from "fs";
 
 async function bootstrap() {
   const bot = Bot.getInstance();
@@ -12,8 +13,8 @@ async function bootstrap() {
   bot.on("disconnected", () => console.log("tmi: Disconnected from Twitch"));
 
   const https = createServer({
-    cert: process.env.SSL_CERT,
-    key: process.env.SSL_KEY,
+    cert: fs.readFileSync(process.env.SSL_CERT!),
+    key: fs.readFileSync(process.env.SSL_KEY!),
   });
 
   const io = new Server(https, {
