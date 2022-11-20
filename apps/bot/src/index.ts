@@ -1,5 +1,5 @@
 import { Bot } from "./bot";
-import { createServer } from "http";
+import { createServer } from "https";
 import { Server } from "socket.io";
 import { joinRooms, onChannelJoin } from "./socket";
 import { onRedeem } from "./bot/handlers/on-redeem";
@@ -11,8 +11,12 @@ async function bootstrap() {
   bot.on("reconnect", () => console.log("tmi: Reconnecting to Twitch"));
   bot.on("disconnected", () => console.log("tmi: Disconnected from Twitch"));
 
-  const httpServer = createServer();
-  const io = new Server(httpServer, {
+  const https = createServer({
+    cert: process.env.SSL_CERT,
+    key: process.env.SSL_KEY,
+  });
+
+  const io = new Server(https, {
     cookie: true,
     cors: {
       origin: process.env.NEXTAUTH_URL,
@@ -29,7 +33,7 @@ async function bootstrap() {
     joinRooms(socket);
   });
 
-  httpServer.listen(process.env.TWITCH_BOT_WS_PORT);
+  https.listen(process.env.TWITCH_BOT_WS_PORT);
 }
 
 bootstrap().catch((err) => console.error(err));
