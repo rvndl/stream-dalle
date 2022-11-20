@@ -1,6 +1,7 @@
 import { getServerSession, Session } from "@stream-dalle/auth";
 import { type inferAsyncReturnType } from "@trpc/server";
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { prisma } from "@stream-dalle/db";
 
 export const createContext = async (opts: CreateNextContextOptions) => {
   const session = (await getServerSession(opts)) as Session & {

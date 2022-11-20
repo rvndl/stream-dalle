@@ -28,7 +28,7 @@ export const authRouter = router({
     return ctx.session.user;
   }),
   getSettings: protectedProcedure.query(async ({ ctx }) => {
-    return await ctx.prisma?.user.findUnique({
+    return await ctx.prisma.user.findUnique({
       where: { id: ctx.session.user.id },
       select: {
         showAuthor: true,
@@ -48,7 +48,7 @@ export const authRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma?.user.updateMany({
+      await ctx.prisma.user.updateMany({
         where: { id: ctx.session.user.id },
         data: {
           ...input,
@@ -60,7 +60,7 @@ export const authRouter = router({
   updateApiKey: protectedProcedure
     .input(z.object({ apiKey: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma?.user.updateMany({
+      await ctx.prisma.user.updateMany({
         where: { id: ctx.session.user.id },
         data: { APIKey: input.apiKey },
       });
@@ -81,7 +81,7 @@ export const authRouter = router({
       const { backgroundColor, cooldown, cost, prompt, title } = input;
 
       try {
-        const account = await ctx.prisma?.account.findFirst({
+        const account = await ctx.prisma.account.findFirst({
           where: { userId: ctx.session.user.id },
           select: {
             access_token: true,
@@ -108,7 +108,7 @@ export const authRouter = router({
         if (res.status === 200) {
           const rewardId = res.data.data[0].id;
 
-          await ctx.prisma?.user.updateMany({
+          await ctx.prisma.user.updateMany({
             where: {
               id: ctx.session.user.id,
             },
