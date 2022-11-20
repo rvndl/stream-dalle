@@ -2,6 +2,7 @@ import { Button } from "../components/ui";
 import { getSession, signOut } from "next-auth/react";
 import { GetServerSideProps } from "next";
 import { Logs, Settings } from "../components/dashboard";
+import { prisma } from "@stream-dalle/db";
 
 const Dashboard = () => {
   return (
