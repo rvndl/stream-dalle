@@ -53,8 +53,10 @@ export const onRedeem = async (
       size: "512x512",
     });
 
+    const url = response.data.data[0].url;
+
     const art = {
-      url: response.data.data[0].url,
+      url,
       author: redeemer,
       prompt: message,
     };
@@ -63,7 +65,9 @@ export const onRedeem = async (
 
     await prisma.logs.create({
       data: {
-        redeemer: redeemer,
+        redeemer,
+        url,
+        prompt: message,
         status: "SUCCESS",
         userName: channel.slice(1),
       },
@@ -77,7 +81,8 @@ export const onRedeem = async (
 
     await prisma.logs.create({
       data: {
-        redeemer: redeemer,
+        redeemer,
+        prompt: message,
         status: "FAILURE",
         userName: channel.slice(1),
       },
