@@ -1,5 +1,6 @@
 import { El_Messiri } from "@next/font/google";
 import clsx from "clsx";
+import { useEffect } from "react";
 
 const elMessiri = El_Messiri({
   weight: "400",
@@ -38,6 +39,13 @@ export const Art = ({
         padding: "0.5vh",
         textShadow: "4px 3px 6px rgba(66, 68, 90, 1)",
       };
+
+  useEffect(() => {
+    if (preview) return;
+
+    const audio = new Audio("/alert.mp3");
+    audio.play();
+  }, [preview]);
 
   return (
     <div className="h-full w-full select-none" style={elMessiri.style}>
