@@ -3,12 +3,14 @@ import { useEffect, useState } from "react";
 import { trpc } from "../utils/tprc";
 
 export const useOverlayUrl = () => {
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState("Loading...");
   const session = useSession({ required: true });
   const { data } = trpc.auth.getSettings.useQuery();
 
   // useEffect ensures we're running on client-side to avoid SSR issues
   useEffect(() => {
+    if (!data) return;
+
     setUrl(
       window.location.origin +
         "/overlay/" +
