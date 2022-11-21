@@ -16,13 +16,13 @@ export const useOverlayUrl = () => {
         "/overlay/" +
         session.data?.user?.name +
         "/" +
-        data?.showAuthor +
+        data.showAuthor +
         "/" +
-        data?.showFrame +
+        data.showFrame +
         "/" +
-        data?.showPrompt +
+        data.showPrompt +
         "/" +
-        data?.showTime
+        data.showTime
     );
   }, [data]);
 
