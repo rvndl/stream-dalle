@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import { ChatUserstate } from "tmi.js";
 import { Bot } from "..";
 import { prisma } from "@stream-dalle/db";
+import axios, { AxiosError } from "axios";
 
 export const onRedeem = async (
   channel: string,
@@ -68,6 +69,12 @@ export const onRedeem = async (
       },
     });
   } catch (error) {
+    let reason = "Unknown error";
+
+    if (axios.isAxiosError(error)) {
+      reason = error.response?.statusText || "Unknown DALL-E error";
+    }
+
     await prisma.logs.create({
       data: {
         redeemer: redeemer,
@@ -76,7 +83,14 @@ export const onRedeem = async (
       },
     });
 
-    bot.say(channel, `@${chatUser.username} Failed to generate your prompt`);
+    // Avoid rate limiting
+    setTimeout(() => {
+      bot.say(
+        channel,
+        `@${chatUser.username} Failed to generate your prompt (${reason})`
+      );
+    }, 2000);
+
     console.log(error);
   }
 };
