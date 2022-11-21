@@ -30,15 +30,16 @@ export const Dalle = () => {
       <div className="mt-4 flex flex-rocolw gap-4 items-start">
         <section className="grid gap-2 flex-1">
           <div>
-            <Label>
-              API Key{" "}
+            <Label className="flex gap-1">
+              <p>API Key</p>
               <a
-                className="text-purple-400 text-xs text-opacity-80 hover:text-opacity-100"
+                className="text-purple-400 text-xs text-opacity-80 hover:text-opacity-100 underline"
                 href="https://beta.openai.com/account/api-keys"
                 target="_blank"
               >
                 Get it here
               </a>
+              <p> - make sure you have billing set up</p>
             </Label>
             <Input
               id="dalle_api_key"
