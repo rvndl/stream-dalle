@@ -3,7 +3,8 @@ import { Server } from "socket.io";
 import { ChatUserstate } from "tmi.js";
 import { Bot } from "..";
 import { prisma } from "@stream-dalle/db";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+import { backupArt } from "../../backup";
 
 export const onRedeem = async (
   channel: string,
@@ -50,7 +51,8 @@ export const onRedeem = async (
     const response = await openAI.createImage({
       prompt: message,
       n: 1,
-      size: "512x512",
+      size: "1024x1024",
+      user: chatUser.username,
     });
 
     const url = response.data.data[0].url;
@@ -63,10 +65,12 @@ export const onRedeem = async (
 
     io.to(channel).emit("new-art", art);
 
+    const backupUrl = await backupArt(url);
+
     await prisma.logs.create({
       data: {
         redeemer,
-        url,
+        url: backupUrl || url,
         prompt: message,
         status: "SUCCESS",
         userName: channel.slice(1),

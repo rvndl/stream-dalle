@@ -4,18 +4,25 @@ import { Server } from "socket.io";
 import { joinRooms, onChannelJoin } from "./socket";
 import { onRedeem } from "./bot/handlers/on-redeem";
 import * as fs from "fs";
+import express from "express";
 
 async function bootstrap() {
+  const app = express();
   const bot = Bot.getInstance();
 
   bot.on("connected", () => console.log("tmi: Connected to Twitch"));
   bot.on("reconnect", () => console.log("tmi: Reconnecting to Twitch"));
   bot.on("disconnected", () => console.log("tmi: Disconnected from Twitch"));
 
-  const https = createServer({
-    cert: fs.readFileSync(process.env.SSL_CERT!),
-    key: fs.readFileSync(process.env.SSL_KEY!),
-  });
+  const https = createServer(
+    {
+      cert: fs.readFileSync(process.env.SSL_CERT!),
+      key: fs.readFileSync(process.env.SSL_KEY!),
+    },
+    app
+  );
+
+  app.use(express.static("backup"));
 
   const io = new Server(https, {
     cookie: true,
