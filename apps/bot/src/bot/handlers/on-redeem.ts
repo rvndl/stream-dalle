@@ -60,7 +60,8 @@ export const onRedeem = async (
     const art = {
       url,
       author: redeemer,
-      prompt: message,
+      // Strip ascii characters from the message
+      prompt: message.replace(/[^a-z0-9]/gi, ""),
     };
 
     io.to(channel).emit("new-art", art);
