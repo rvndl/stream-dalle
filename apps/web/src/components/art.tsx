@@ -1,9 +1,9 @@
-import { El_Messiri } from "@next/font/google";
-import clsx from "clsx";
+import { Lato } from "@next/font/google";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 
-const elMessiri = El_Messiri({
-  weight: "400",
+const lato = Lato({
+  weight: ["100", "400", "700", "900"],
   subsets: ["latin", "latin-ext"],
 });
 
@@ -31,13 +31,13 @@ export const Art = ({
         fontSize: "85%",
         lineHeight: "100%",
         padding: "0.5%",
-        textShadow: "4px 3px 6px rgba(66, 68, 90, 1)",
+        textShadow: "4px 3px 6px rgba(0, 0, 0, .2)",
       }
     : {
-        fontSize: "4vh",
-        lineHeight: "4vh",
+        fontSize: "2.8vh",
+        lineHeight: "3.5vh",
         padding: "0.5vh",
-        textShadow: "4px 3px 6px rgba(66, 68, 90, 1)",
+        textShadow: "4px 3px 6px rgba(0, 0, 0, .2)",
       };
 
   useEffect(() => {
@@ -48,32 +48,35 @@ export const Art = ({
   }, [preview]);
 
   return (
-    <div className="h-full w-full select-none" style={elMessiri.style}>
-      {showAuthor && (
-        <p
-          className="absolute z-20 top-0 bg-black bg-opacity-40 text-center w-full"
-          style={fontStyle}
-        >
-          {author}
-        </p>
-      )}
-      {showFrame && (
-        <img src="/image-frame.webp" className="h-full z-10 absolute" />
-      )}
-      <img
-        src={url}
-        className={clsx(
-          "h-full w-fill absolute top-0 left-0",
-          showFrame && " scale-[.8]"
-        )}
-      />
+    <div className="h-full w-full select-none" style={lato.style}>
+      <img src={url} className="h-full w-fill absolute top-0 left-0" />
       {showPrompt && (
-        <p
-          className="absolute z-20 bottom-0 bg-black bg-opacity-40 text-center w-full"
-          style={fontStyle}
+        <motion.div
+          transition={{ delay: 0.6 }}
+          initial={{ opacity: 0, y: "10vh" }}
+          animate={{ opacity: 1, y: "0vh" }}
+          style={{ ...fontStyle, backdropFilter: "blur(25px)" }}
+          className="px-2 absolute z-20 bottom-0 bg-opacity-100 w-full flex"
         >
-          “{prompt}”
-        </p>
+          <p>
+            <motion.span
+              transition={{ delay: 0.8 }}
+              initial={{ opacity: 0, y: "1vh" }}
+              animate={{ opacity: 1, y: "0vh" }}
+              className="font-extrabold text-purple-300"
+            >
+              {author}:
+            </motion.span>
+            <motion.span
+              transition={{ delay: 1 }}
+              initial={{ opacity: 0, y: "1vh" }}
+              animate={{ opacity: 1, y: "0vh" }}
+              className="ml-1 text-gray-100 font-semibold"
+            >
+              {prompt}
+            </motion.span>
+          </p>
+        </motion.div>
       )}
     </div>
   );

@@ -33,11 +33,11 @@ const Gallery = () => {
           key={art.id}
           className="w-full bg-gray-800 shadow-md rounded-xl hover:-translate-y-2 transition hover:shadow-xl"
         >
-          {}
           <img
             src={process.env.NEXT_PUBLIC_BACKUP_URL + "/" + art.url}
             className="w-full h-auto rounded-t-xl"
             alt="art"
+            loading="lazy"
           />
           <div className="w-full p-4">
             <h2 className="font-semibold truncate w-full text-lg">

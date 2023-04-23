@@ -10,10 +10,6 @@ interface Art {
   url: string;
 }
 
-interface Event extends Art {
-  id: string;
-}
-
 const Overlay = () => {
   const [queue, setQueue] = useState<Art[]>([]);
   const socket = useRef<Socket | null>(null);
@@ -75,9 +71,10 @@ const Overlay = () => {
     <AnimatePresence>
       {queue[0] && (
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0 }}
+          transition={{ duration: 0.4 }}
           className={"h-screen w-screen relative overflow-hidden"}
         >
           <Art
