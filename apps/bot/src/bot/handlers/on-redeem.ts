@@ -47,7 +47,7 @@ export const onRedeem = async (
   const openAI = new OpenAIApi(configuration);
 
   try {
-    bot.say(channel, `@${chatUser.username} Generating your prompt...`);
+    bot.say(channel, `@${chatUser.username} ⏱ Generating your prompt...`);
     const response = await openAI.createImage({
       prompt: message,
       n: 1,
@@ -97,7 +97,7 @@ export const onRedeem = async (
     setTimeout(() => {
       bot.say(
         channel,
-        `@${chatUser.username} Failed to generate your prompt (${reason})`
+        `@${chatUser.username} ❌ Failed to generate your prompt (${reason})`
       );
     }, 2000);
 
