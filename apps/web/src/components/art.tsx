@@ -31,13 +31,13 @@ export const Art = ({
         fontSize: "85%",
         lineHeight: "100%",
         padding: "0.5%",
-        textShadow: "4px 3px 6px rgba(0, 0, 0, .2)",
+        textShadow: "4px 3px 6px rgba(0, 0, 0, .3)",
       }
     : {
-        fontSize: "2.8vh",
-        lineHeight: "3.5vh",
+        fontSize: "3.2vh",
+        lineHeight: "4vh",
         padding: "0.5vh",
-        textShadow: "4px 3px 6px rgba(0, 0, 0, .2)",
+        textShadow: "4px 3px 6px rgba(0, 0, 0, .3)",
       };
 
   useEffect(() => {
@@ -53,28 +53,30 @@ export const Art = ({
       {showPrompt && (
         <motion.div
           transition={{ delay: 0.6 }}
-          initial={{ opacity: 0, y: "10vh" }}
+          initial={{ opacity: 0, y: "2vh" }}
           animate={{ opacity: 1, y: "0vh" }}
           style={{ ...fontStyle, backdropFilter: "blur(25px)" }}
-          className="px-2 absolute z-20 bottom-0 bg-opacity-100 w-full flex"
+          className="px-2 absolute z-20 bottom-0 bg-black bg-opacity-20 w-full flex"
         >
-          <p>
+          <p className="relative flex flex-wrap">
             <motion.span
-              transition={{ delay: 0.8 }}
-              initial={{ opacity: 0, y: "1vh" }}
+              transition={{ delay: 0.9 }}
+              initial={{ opacity: 0, y: "4vh" }}
               animate={{ opacity: 1, y: "0vh" }}
-              className="font-extrabold text-purple-300"
+              className="font-extrabold text-orange-200"
             >
               {author}:
             </motion.span>
-            <motion.span
-              transition={{ delay: 1 }}
-              initial={{ opacity: 0, y: "1vh" }}
-              animate={{ opacity: 1, y: "0vh" }}
-              className="ml-1 text-gray-100 font-semibold"
-            >
-              {prompt}
-            </motion.span>
+            {prompt.split(" ").map((word, idx) => (
+              <motion.div
+                transition={{ delay: 1 + idx * 0.05 }}
+                initial={{ opacity: 0, y: "4vh" }}
+                animate={{ opacity: 1, y: "0vh" }}
+                className="ml-1 text-gray-100 font-semibold"
+              >
+                {word}
+              </motion.div>
+            ))}
           </p>
         </motion.div>
       )}
