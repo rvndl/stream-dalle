@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from "openai";
+import OpenAI from "openai";
 import { Server } from "socket.io";
 import { ChatUserstate } from "tmi.js";
 import { Bot } from "..";
@@ -41,19 +41,27 @@ export const onRedeem = async (
 
   const bot = Bot.getInstance();
 
-  const configuration = new Configuration({
+  const openai = new OpenAI({
     apiKey: user.APIKey,
   });
-  const openAI = new OpenAIApi(configuration);
 
   try {
     bot.say(channel, `@${chatUser.username} ⏱ Generating your prompt...`);
-    const response = await openAI.createImage({
-      prompt: message,
-      n: 1,
-      size: "1024x1024",
-      user: chatUser.username,
-    });
+    // TODO: use official OpenAI package when DALLE-3 support gets added
+    const response = await axios.post(
+      "https://api.openai.com/v1/images/generations",
+      {
+        model: "dall-e-3",
+        prompt: message,
+        n: 1,
+        size: "1024x1024",
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${user.APIKey}`,
+        },
+      }
+    );
 
     const url = response.data.data[0].url;
 
