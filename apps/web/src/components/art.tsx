@@ -69,7 +69,7 @@ export const Art = ({
             </motion.span>
             {prompt.split(" ").map((word, idx) => (
               <motion.div
-                transition={{ delay: 1 + idx * 0.05 }}
+                transition={{ delay: 1 + idx * 0.04 }}
                 initial={{ opacity: 0, y: "4vh" }}
                 animate={{ opacity: 1, y: "0vh" }}
                 className="ml-1 text-gray-100 font-semibold"

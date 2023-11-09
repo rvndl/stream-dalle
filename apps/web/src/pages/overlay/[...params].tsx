@@ -22,7 +22,8 @@ const Overlay = () => {
   const showAuthor = params?.[1] === "true";
   const showFrame = params?.[2] === "true";
   const showPrompt = params?.[3] === "true";
-  const showTime = parseInt(params?.[4] || "10000");
+  const showTime = 6000;
+  // const showTime = parseInt(params?.[4] || "10000");
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
