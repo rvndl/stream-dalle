@@ -1,47 +1,37 @@
 import { Server } from "socket.io";
-import { ChatUserstate } from "tmi.js";
-import { Bot } from "..";
+import { SubUserstate } from "tmi.js";
 import { prisma } from "@stream-dalle/db";
 import axios from "axios";
-import { backupArt } from "../../backup";
 
-export const onRedeem = async (
+export const onResub = async (
   channel: string,
-  chatUser: ChatUserstate,
-  message: string,
+  username: string,
+  chatUser: SubUserstate,
+  subMessage: string,
   io: Server
 ) => {
-  if (!chatUser["custom-reward-id"]) {
-    return;
-  }
-
-  const rewardId = chatUser["custom-reward-id"];
-  const redeemer = chatUser["display-name"] || chatUser.username || "unknown";
-
   const user = await prisma.user.findFirst({
     where: {
       name: { equals: channel.slice(1), mode: "insensitive" },
     },
-    select: { rewardId: true, APIKey: true },
+    select: { rewardId: true, APIKey: true, onResub: true },
   });
 
   if (!user) {
     return;
   }
 
-  if (!user.APIKey || !user.rewardId) {
+  if (!user.APIKey) {
     return;
   }
 
-  // check if the reward id matches
-  if (user.rewardId !== rewardId) {
+  if (!user.onResub) {
     return;
   }
 
-  const bot = Bot.getInstance();
+  const message = subMessage ?? chatUser["system-msg"];
 
   try {
-    bot.say(channel, `@${chatUser.username} ⏱ Generating your prompt...`);
     // TODO: use official OpenAI package when DALLE-3 support gets added
     const response = await axios.post(
       "https://api.openai.com/v1/images/generations",
@@ -62,47 +52,31 @@ export const onRedeem = async (
 
     const art = {
       url,
-      author: redeemer,
+      author: username,
       // Strip ascii characters from the message
       prompt: message.replace(/[^a-z0-9]/gi, " "),
     };
 
     io.to(channel).emit("new-art", art);
 
-    const backupUrl = await backupArt(url);
-
     await prisma.logs.create({
       data: {
-        redeemer,
-        url: backupUrl || url,
+        redeemer: username,
+        url: url,
         prompt: message,
         status: "SUCCESS",
         userName: channel.slice(1),
       },
     });
   } catch (error) {
-    let reason = "Unknown error";
-
-    if (axios.isAxiosError(error)) {
-      reason = error.response?.statusText || "Unknown DALL-E error";
-    }
-
     await prisma.logs.create({
       data: {
-        redeemer,
+        redeemer: username,
         prompt: message,
         status: "FAILURE",
         userName: channel.slice(1),
       },
     });
-
-    // Avoid rate limiting
-    setTimeout(() => {
-      bot.say(
-        channel,
-        `@${chatUser.username} ❌ Failed to generate your prompt (${reason})`
-      );
-    }, 2000);
 
     console.log(error);
   }

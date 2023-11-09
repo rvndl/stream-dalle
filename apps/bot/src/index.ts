@@ -5,6 +5,7 @@ import { joinRooms, onChannelJoin } from "./socket";
 import { onRedeem } from "./bot/handlers/on-redeem";
 import * as fs from "fs";
 import express from "express";
+import { onResub } from "./bot/handlers/on-resub";
 
 async function bootstrap() {
   const app = express();
@@ -35,6 +36,10 @@ async function bootstrap() {
   bot.on("message", async (channel, user, message) =>
     onRedeem(channel, user, message, io)
   );
+
+  bot.on("resub", async (channel, username, _, message, user) => {
+    onResub(channel, username, user, message, io);
+  });
 
   io.on("connection", (socket) => {
     socket.on("channel-join", () => onChannelJoin(socket));
