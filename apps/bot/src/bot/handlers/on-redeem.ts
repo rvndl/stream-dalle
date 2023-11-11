@@ -56,6 +56,7 @@ export const onRedeem = async (
       url: imageUrl,
       author: redeemer,
       prompt: message,
+      type: "REDEMPTION",
     };
 
     io.to(channel).emit("new-art", art);

@@ -96,6 +96,7 @@ enum LogType {
   UNKNOWN
   REDEMPTION
   RESUB
+  FIRST_MESSAGE
 }
 
 enum Model {

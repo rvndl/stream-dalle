@@ -36,6 +36,7 @@ export class Dalle {
         size,
         n: 1,
         prompt,
+        // The `hd` parameter always has to be `true` otherwise the API will error out if specified as `false`
         ...(hd && { hd: true }),
       },
       { headers: { Authorization: `Bearer ${APIKey}` } }

@@ -2,7 +2,7 @@ import { useId, useState } from "react";
 import toast from "react-hot-toast";
 import { useStepStore } from "../../store/step";
 import { trpc } from "../../utils/tprc";
-import { Art } from "../art";
+import { Art } from "../art/art";
 import { Button, Card, Checkbox, Input, Label } from "../ui";
 
 export const Overlay = () => {

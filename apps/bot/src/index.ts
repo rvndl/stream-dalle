@@ -6,6 +6,7 @@ import { onRedeem } from "./bot/handlers/on-redeem";
 import * as fs from "fs";
 import express from "express";
 import { onResub } from "./bot/handlers/on-resub";
+import { onMessage } from "./bot/handlers/on-message";
 
 async function bootstrap() {
   const app = express();
@@ -33,9 +34,14 @@ async function bootstrap() {
     },
   });
 
-  bot.on("message", async (channel, user, message) =>
-    onRedeem(channel, user, message, io)
-  );
+  bot.on("message", async (channel, user, message) => {
+    if (message === "sd!ping") {
+      bot.say(channel, "Pong");
+    }
+
+    onMessage(channel, user, message, io);
+    onRedeem(channel, user, message, io);
+  });
 
   bot.on("resub", async (channel, username, _, message, user) => {
     onResub(channel, username, user, message, io);

@@ -1,16 +1,18 @@
 import { Server } from "socket.io";
-import { SubUserstate } from "tmi.js";
+import { ChatUserstate } from "tmi.js";
 import { prisma } from "@stream-dalle/db";
 import { Dalle } from "@stream-dalle/dalle";
-import { getRandomDefaultMessage } from "../../utils";
 
-export const onResub = async (
+export const onMessage = async (
   channel: string,
-  username: string,
-  chatUser: SubUserstate,
-  subMessage: string,
+  chatUser: ChatUserstate,
+  message: string,
   io: Server
 ) => {
+  if (!chatUser["first-msg"]) {
+    return;
+  }
+
   const user = await prisma.user.findFirst({
     where: {
       name: { equals: channel.slice(1), mode: "insensitive" },
@@ -20,7 +22,7 @@ export const onResub = async (
       APIKey: true,
       model: true,
       hd: true,
-      onResub: true,
+      onFirstMessage: true,
     },
   });
 
@@ -32,11 +34,11 @@ export const onResub = async (
     return;
   }
 
-  if (!user.onResub) {
+  if (!user.onFirstMessage) {
     return;
   }
 
-  const message = subMessage ?? getRandomDefaultMessage(username);
+  const username = chatUser["display-name"] || chatUser.username || "unknown";
 
   const dalle = new Dalle({
     APIKey: user.APIKey,
@@ -52,7 +54,7 @@ export const onResub = async (
       url: imageUrl,
       author: username,
       prompt: message,
-      type: "RESUB",
+      type: "FIRST_MESSAGE",
     };
 
     io.to(channel).emit("new-art", art);
@@ -61,7 +63,7 @@ export const onResub = async (
       data: {
         redeemer: username,
         prompt: message,
-        type: "RESUB",
+        type: "FIRST_MESSAGE",
         status: "SUCCESS",
         userName: channel.slice(1),
       },
@@ -71,7 +73,7 @@ export const onResub = async (
       data: {
         redeemer: username,
         prompt: message,
-        type: "RESUB",
+        type: "FIRST_MESSAGE",
         status: "FAILURE",
         userName: channel.slice(1),
       },

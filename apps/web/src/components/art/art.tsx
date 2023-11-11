@@ -1,6 +1,7 @@
 import { Lato } from "@next/font/google";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { LogType } from "@stream-dalle/db";
 
 const lato = Lato({
   weight: ["100", "400", "700", "900"],
@@ -15,6 +16,7 @@ interface Props {
   showAuthor: boolean;
   showPrompt: boolean;
   preview?: boolean;
+  type?: LogType;
 }
 
 export const Art = ({

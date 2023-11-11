@@ -1,13 +1,15 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
-import { Art } from "../../components/art";
+import { Art } from "../../components/art/art";
 import { AnimatePresence, motion } from "framer-motion";
 import { io, Socket } from "socket.io-client";
+import { LogType } from "@stream-dalle/db";
 
 interface Art {
   author: string;
   prompt: string;
   url: string;
+  type: LogType;
 }
 
 const Overlay = () => {
@@ -85,6 +87,7 @@ const Overlay = () => {
             showAuthor={showAuthor}
             showFrame={showFrame}
             showPrompt={showPrompt}
+            type={queue[0].type}
           />
         </motion.div>
       )}
