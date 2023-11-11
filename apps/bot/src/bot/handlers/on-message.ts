@@ -2,6 +2,7 @@ import { Server } from "socket.io";
 import { ChatUserstate } from "tmi.js";
 import { prisma } from "@stream-dalle/db";
 import { Dalle } from "@stream-dalle/dalle";
+import { backupArt } from "../../backup";
 
 export const onMessage = async (
   channel: string,
@@ -59,8 +60,10 @@ export const onMessage = async (
 
     io.to(channel).emit("new-art", art);
 
+    const backupUrl = await backupArt(imageUrl);
     await prisma.logs.create({
       data: {
+        url: backupUrl,
         redeemer: username,
         prompt: message,
         type: "FIRST_MESSAGE",

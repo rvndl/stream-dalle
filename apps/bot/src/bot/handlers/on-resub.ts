@@ -3,6 +3,7 @@ import { SubUserstate } from "tmi.js";
 import { prisma } from "@stream-dalle/db";
 import { Dalle } from "@stream-dalle/dalle";
 import { getRandomDefaultMessage } from "../../utils";
+import { backupArt } from "../../backup";
 
 export const onResub = async (
   channel: string,
@@ -57,8 +58,10 @@ export const onResub = async (
 
     io.to(channel).emit("new-art", art);
 
+    const backupUrl = await backupArt(imageUrl);
     await prisma.logs.create({
       data: {
+        url: backupUrl,
         redeemer: username,
         prompt: message,
         type: "RESUB",
