@@ -36,7 +36,7 @@ export class Dalle {
         size,
         n: 1,
         prompt,
-        hd,
+        ...(hd && { hd: true }),
       },
       { headers: { Authorization: `Bearer ${APIKey}` } }
     );
