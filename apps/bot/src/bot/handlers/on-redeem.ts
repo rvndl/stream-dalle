@@ -4,6 +4,7 @@ import { Bot } from "..";
 import { prisma } from "@stream-dalle/db";
 import axios from "axios";
 import { backupArt } from "../../backup";
+import { Dalle } from "@stream-dalle/dalle";
 
 export const onRedeem = async (
   channel: string,
@@ -22,7 +23,7 @@ export const onRedeem = async (
     where: {
       name: { equals: channel.slice(1), mode: "insensitive" },
     },
-    select: { rewardId: true, APIKey: true },
+    select: { rewardId: true, APIKey: true, model: true, hd: true },
   });
 
   if (!user) {
@@ -38,42 +39,33 @@ export const onRedeem = async (
     return;
   }
 
+  const dalle = new Dalle({
+    APIKey: user.APIKey,
+    model: user.model,
+    hd: user.hd,
+    size: "1024x1024",
+  });
+
   const bot = Bot.getInstance();
 
   try {
     bot.say(channel, `@${chatUser.username} ⏱ Generating your prompt...`);
-    // TODO: use official OpenAI package when DALLE-3 support gets added
-    const response = await axios.post(
-      "https://api.openai.com/v1/images/generations",
-      {
-        model: "dall-e-3",
-        prompt: message,
-        n: 1,
-        size: "1024x1024",
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${user.APIKey}`,
-        },
-      }
-    );
-
-    const url = response.data.data[0].url;
+    const imageUrl = await dalle.generateImage(message);
 
     const art = {
-      url,
+      url: imageUrl,
       author: redeemer,
       prompt: message,
     };
 
     io.to(channel).emit("new-art", art);
 
-    const backupUrl = await backupArt(url);
+    const backupUrl = await backupArt(imageUrl);
 
     await prisma.logs.create({
       data: {
         redeemer,
-        url: backupUrl || url,
+        url: backupUrl || imageUrl,
         prompt: message,
         status: "SUCCESS",
         type: "REDEMPTION",

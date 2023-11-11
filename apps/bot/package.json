@@ -9,6 +9,7 @@
   "dependencies": {
     "@stream-dalle/auth": "*",
     "@stream-dalle/db": "*",
+    "@stream-dalle/dalle": "*",
     "axios": "1.1.3",
     "express": "4.18.2",
     "openai": "4.15.4",

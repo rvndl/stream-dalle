@@ -51,15 +51,18 @@ model User {
   sessions      Session[]
   logs          Logs[]
 
-  APIKey     String?
-  rewardId   String?
-  imageSize  String  @default("1024x1024")
-  connected  Boolean @default(false)
-  showAuthor Boolean @default(true)
-  showPrompt Boolean @default(true)
-  showFrame  Boolean @default(true)
-  showTime   Int     @default(10000)
-  onResub    Boolean @default(false)
+  APIKey         String?
+  model          Model   @default(DALLE3)
+  rewardId       String?
+  imageSize      String  @default("1024x1024")
+  connected      Boolean @default(false)
+  showAuthor     Boolean @default(true)
+  showPrompt     Boolean @default(true)
+  showFrame      Boolean @default(true)
+  showTime       Int     @default(10000)
+  onResub        Boolean @default(false)
+  onFirstMessage Boolean @default(false)
+  hd             Boolean @default(false)
 }
 
 model VerificationToken {
@@ -93,4 +96,9 @@ enum LogType {
   UNKNOWN
   REDEMPTION
   RESUB
+}
+
+enum Model {
+  DALLE2
+  DALLE3
 }
