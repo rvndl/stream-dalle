@@ -63,7 +63,7 @@ export const onRedeem = async (
     const art = {
       url,
       author: redeemer,
-      prompt: message.replace(/[^a-z0-9]/gi, " "),
+      prompt: message,
     };
 
     io.to(channel).emit("new-art", art);
