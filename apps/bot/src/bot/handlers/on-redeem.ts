@@ -33,7 +33,7 @@ export const onRedeem = async (
     return;
   }
 
-  // check if the reward id matches
+  // Check if the reward id matches
   if (user.rewardId !== rewardId) {
     return;
   }
@@ -63,7 +63,6 @@ export const onRedeem = async (
     const art = {
       url,
       author: redeemer,
-      // Strip ascii characters from the message
       prompt: message.replace(/[^a-z0-9]/gi, " "),
     };
 
@@ -77,6 +76,7 @@ export const onRedeem = async (
         url: backupUrl || url,
         prompt: message,
         status: "SUCCESS",
+        type: "REDEMPTION",
         userName: channel.slice(1),
       },
     });
@@ -92,18 +92,15 @@ export const onRedeem = async (
         redeemer,
         prompt: message,
         status: "FAILURE",
+        type: "REDEMPTION",
         userName: channel.slice(1),
       },
     });
 
-    // Avoid rate limiting
-    setTimeout(() => {
-      bot.say(
-        channel,
-        `@${chatUser.username} ❌ Failed to generate your prompt (${reason})`
-      );
-    }, 2000);
-
+    bot.sayTimed(
+      channel,
+      `@${chatUser.username} ❌ Failed to generate your prompt (${reason})`
+    );
     console.log(error);
   }
 };

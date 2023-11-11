@@ -62,8 +62,8 @@ export const onResub = async (
     await prisma.logs.create({
       data: {
         redeemer: username,
-        url: url,
         prompt: message,
+        type: "RESUB",
         status: "SUCCESS",
         userName: channel.slice(1),
       },
@@ -73,6 +73,7 @@ export const onResub = async (
       data: {
         redeemer: username,
         prompt: message,
+        type: "RESUB",
         status: "FAILURE",
         userName: channel.slice(1),
       },

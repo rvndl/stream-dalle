@@ -2,12 +2,14 @@ import axios, { AxiosInstance } from "axios";
 import { CustomRewardParams, CustomRewardResponse } from "./types/reward";
 import { User } from "./types/user";
 
+const HELIX_URL = "https://api.twitch.tv/helix";
+
 export class TwitchApi {
   private axios: AxiosInstance;
 
   constructor(clientId: string, token: string) {
     this.axios = axios.create({
-      baseURL: "https://api.twitch.tv/helix",
+      baseURL: HELIX_URL,
       headers: {
         Authorization: `Bearer ${token}`,
         "Client-ID": clientId,

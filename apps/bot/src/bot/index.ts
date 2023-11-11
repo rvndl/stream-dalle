@@ -45,6 +45,10 @@ export class Bot {
     this.client.say(channel, message);
   }
 
+  public sayTimed(channel: string, message: string, timeout: number = 2000) {
+    setTimeout(() => this.say(channel, message), timeout);
+  }
+
   public getChannels(): string[] {
     return this.client.getChannels();
   }
