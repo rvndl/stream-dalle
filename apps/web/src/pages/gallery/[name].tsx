@@ -42,10 +42,12 @@ const Gallery = () => {
       {}
     ) as Record<string, number>;
 
-    return Object.keys(transformedStats).map((key) => ({
-      key,
-      text: `${tabKeysText[key]} (${transformedStats?.[key] || 0})`,
-    }));
+    return Object.keys(transformedStats)
+      .sort((a, b) => transformedStats?.[b] - transformedStats?.[a])
+      .map((key) => ({
+        key,
+        text: `${tabKeysText[key]} (${transformedStats?.[key] || 0})`,
+      }));
   }, [stats]);
 
   if (isStatsLoading)
