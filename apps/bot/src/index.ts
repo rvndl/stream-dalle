@@ -1,32 +1,36 @@
 import { Bot } from "./bot";
-import { createServer } from "https";
-import { Server } from "socket.io";
+import { createServer as createHTTPServer, Server as ServerHTTP } from "http";
+import {
+  createServer as createHTTPSServer,
+  Server as ServerHTTPS,
+} from "https";
 import { joinRooms, onChannelJoin } from "./socket";
-import { onRedeem } from "./bot/handlers/on-redeem";
 import * as fs from "fs";
 import express from "express";
-import { onResub } from "./bot/handlers/on-resub";
-import { onMessage } from "./bot/handlers/on-message";
+import { onResub, onFirstMessage, onRedeem } from "./bot/handlers";
+import { Server } from "socket.io";
 
 async function bootstrap() {
   const app = express();
   const bot = Bot.getInstance();
 
-  bot.on("connected", () => console.log("tmi: Connected to Twitch"));
-  bot.on("reconnect", () => console.log("tmi: Reconnecting to Twitch"));
-  bot.on("disconnected", () => console.log("tmi: Disconnected from Twitch"));
+  let webServer: ServerHTTP | ServerHTTPS;
 
-  const https = createServer(
-    {
-      cert: fs.readFileSync(process.env.SSL_CERT!),
-      key: fs.readFileSync(process.env.SSL_KEY!),
-    },
-    app
-  );
+  if (process.env.USE_HTTPS === "true") {
+    webServer = createHTTPSServer(
+      {
+        cert: fs.readFileSync(process.env.SSL_CERT!),
+        key: fs.readFileSync(process.env.SSL_KEY!),
+      },
+      app
+    );
+  } else {
+    webServer = createHTTPServer(app);
+  }
 
   app.use(express.static("backup"));
 
-  const io = new Server(https, {
+  const io = new Server(webServer, {
     cookie: true,
     cors: {
       origin: process.env.NEXTAUTH_URL,
@@ -39,7 +43,7 @@ async function bootstrap() {
       bot.say(channel, "Pong");
     }
 
-    onMessage(channel, user, message, io);
+    onFirstMessage(channel, user, message, io);
     onRedeem(channel, user, message, io);
   });
 
@@ -52,7 +56,7 @@ async function bootstrap() {
     joinRooms(socket);
   });
 
-  https.listen(process.env.TWITCH_BOT_WS_PORT);
+  webServer.listen(process.env.TWITCH_BOT_WS_PORT);
 }
 
 bootstrap().catch((err) => console.error(err));

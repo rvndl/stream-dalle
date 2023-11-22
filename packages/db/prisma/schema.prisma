@@ -9,10 +9,22 @@ datasource db {
   referentialIntegrity = "prisma"
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum LogStatus {
+  UNKNOWN
+  SUCCESS
+  FAILURE
+}
+
+enum LogType {
+  UNKNOWN
+  REDEMPTION
+  RESUB
+  FIRST_MESSAGE
+}
+
+enum Model {
+  DALLE2
+  DALLE3
 }
 
 model Account {
@@ -84,22 +96,4 @@ model Logs {
   createdAt DateTime  @default(now())
 
   user User? @relation(fields: [userName], references: [name])
-}
-
-enum LogStatus {
-  UNKNOWN
-  SUCCESS
-  FAILURE
-}
-
-enum LogType {
-  UNKNOWN
-  REDEMPTION
-  RESUB
-  FIRST_MESSAGE
-}
-
-enum Model {
-  DALLE2
-  DALLE3
 }

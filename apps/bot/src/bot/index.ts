@@ -25,6 +25,14 @@ export class Bot {
     });
 
     this.client.connect().then(() => this.loadChannels());
+
+    this.client.on("connected", () => console.log("tmi: Connected to Twitch"));
+    this.client.on("reconnect", () =>
+      console.log("tmi: Reconnecting to Twitch")
+    );
+    this.client.on("disconnected", () =>
+      console.log("tmi: Disconnected from Twitch")
+    );
   }
 
   public static getInstance(): Bot {
@@ -46,7 +54,7 @@ export class Bot {
   }
 
   public sayTimed(channel: string, message: string, timeout: number = 2000) {
-    setTimeout(() => this.say(channel, message), timeout);
+    return setTimeout(() => this.say(channel, message), timeout);
   }
 
   public getChannels(): string[] {

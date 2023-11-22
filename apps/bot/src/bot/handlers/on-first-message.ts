@@ -4,7 +4,7 @@ import { prisma } from "@stream-dalle/db";
 import { Dalle } from "@stream-dalle/dalle";
 import { backupArt } from "../../backup";
 
-export const onMessage = async (
+export const onFirstMessage = async (
   channel: string,
   chatUser: ChatUserstate,
   message: string,
